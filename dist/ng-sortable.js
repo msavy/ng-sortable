@@ -527,8 +527,8 @@
   /**
    * Directive for sortable item handle.
    */
-  mainModule.directive('asSortableItemHandle', ['sortableConfig', '$helper', '$window', '$document',
-    function (sortableConfig, $helper, $window, $document) {
+  mainModule.directive('asSortableItemHandle', ['sortableConfig', '$helper', '$window', '$document', '$compile', '$timeout',
+    function (sortableConfig, $helper, $window, $document, $compile, $timeout) {
       return {
         require: '^asSortableItem',
         scope: true,
@@ -664,6 +664,16 @@
 
             placeHolder = angular.element($document[0].createElement(tagName))
               .addClass(sortableConfig.placeHolderClass).addClass(scope.sortableScope.options.additionalPlaceholderClass);
+
+            //compile placeholder template and use $timeout to apply it late (to avoid layout glitches).
+            if (scope.sortableScope.options.placeHolderTemplate) {
+              var newElem = angular.element(scope.sortableScope.options.placeHolderTemplate);
+              $compile(newElem)(scope);
+              $timeout(function () {
+                placeHolder.append(newElem.html());
+              });
+            }
+
             placeHolder.css('width', $helper.width(scope.itemScope.element) + 'px');
             placeHolder.css('height', $helper.height(scope.itemScope.element) + 'px');
 
@@ -814,6 +824,7 @@
                 }
               }
               if (targetScope.type === 'sortable') {//sortable scope.
+                targetElement = angular.element(placeElement).parent();
                 if (targetScope.accept(scope, targetScope) &&
                   targetElement[0].parentNode !== targetScope.element[0]) {
                   //moving over sortable bucket. not over item.
