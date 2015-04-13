@@ -70,6 +70,8 @@ The directives are structured like below.
 ```<div as-sortable="sortableOptions">
    ...
 </div>```
+- A template may be provided via the `placeHolderTemplate` option which will be compiled and appended into the placeholder:
+`$scope.sortableOptions = { placeHolderTemplate: '<div>Drop the item here</div>' }`
 
 #### Dragging element CSS
 - CSS styling may be applied via the "as-sortable-dragging" class
@@ -85,7 +87,7 @@ e.g.
     .as-sortable-dragging{
        border: 1px dotted #000 !important;
     }
-          
+
 
 #### Callbacks:
 
@@ -104,7 +106,7 @@ Following callbacks are defined, and should be overridden to perform custom logi
 - callbacks.dragEnd = function({type: Object}) // triggered on drag end.
 
 ###### Parameters:
-    Object (event) - structure         
+    Object (event) - structure
              source:
                   index: original index before move.
                   itemScope: original item scope before move.
@@ -112,7 +114,7 @@ Following callbacks are defined, and should be overridden to perform custom logi
              dest: index
                   index: index after move.
                   sortableScope: destination sortable scope.  
-                  
+
 ##### Some Notable Fixes:
 
 - Touch is allowed on only one Item at a time. Tap is prevented on draggable item.
@@ -172,20 +174,20 @@ Define your callbacks in the invoking controller.
         orderChanged: function(event) {//Do what you want},
         containment: '#board'//optional param.
     };
-    
+
 That's what all you have to do.
 
 ###### Restrict Moving between Columns:
 
 Define the accept callback. and the implementation is your choice.
-The itemHandleScope(dragged Item) and sortableScope(destination list) is exposed. 
+The itemHandleScope(dragged Item) and sortableScope(destination list) is exposed.
 Compare the scope Objects there like below., If you have to exactly restrict moving between columns.
 
     accept: function (sourceItemHandleScope, destSortableScope) {
       return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
     }
 
-If you want to restrict only to certain columns say you have 5 columns and you want 
+If you want to restrict only to certain columns say you have 5 columns and you want
 the drag to be allowed in only 3 columns, then you need to implement your custom logic there.,
 and that too becomes straight forward as you have your scope Objects in hand.
 
@@ -211,7 +213,7 @@ The move failure Impl here just reverts the moved item to its original location.
            * remove the item from destination Column.
            * insert the item again in original Column.
            */
-          moveFailure = function() {   
+          moveFailure = function() {
                eventObj.dest.sortableScope.removeItem(eventObj.dest.index);
                eventObj.source.itemScope.sortableScope.insertItem(eventObj.source.index, eventObj.source.itemScope.task);
           };
@@ -237,7 +239,7 @@ The Drag can be controlled at runtime and you can enable/disable it by setting t
 
 ##### Development Environment setup:
 
-Clone the master 
+Clone the master
     $ git clone https://github.com/a5hik/ng-sortable.git
 
 or Download from [Source Master](https://github.com/a5hik/ng-sortable/archive/master.zip)
@@ -264,7 +266,7 @@ Run the following commands from the project root directory.
 To access the local server, enter the following URL into your web browser:
 
     http://localhost:9009/demo/
-    
+
 ##### NG Modules Link:
 
 If you use this module you can give it a thumbs up at [http://ngmodules.org/modules/ng-sortable](http://ngmodules.org/modules/ng-sortable).
